@@ -22,11 +22,17 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Employee e, @RequestHeader("userId") int userId) {
+    public ResponseEntity<String> create(@RequestBody Employee e, @RequestHeader("userId") int userId) {
         e.setUserId(userId);
+
+        if (repo.existsByEmailAndUserId(e.getEmail(), userId)) {
+            return ResponseEntity.status(409).body("Email ya está registrado para este usuario.");
+        }
+
         repo.save(e);
         return ResponseEntity.ok().build();
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable int id, @RequestBody Employee e) {

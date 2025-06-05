@@ -33,6 +33,14 @@ public class EmployeeRepository {
         jdbc.update("UPDATE employees SET first_name = ?, last_name = ?, email = ? WHERE employee_id = ?",
                 e.getFirstName(), e.getLastName(), e.getEmail(), e.getEmployeeId());
     }
+    public boolean existsByEmailAndUserId(String email, int userId) {
+        Integer count = jdbc.queryForObject(
+                "SELECT COUNT(*) FROM employees WHERE email = ? AND user_id = ?",
+                Integer.class,
+                email, userId
+        );
+        return count != null && count > 0;
+    }
 
     public void delete(int id) {
         jdbc.update("DELETE FROM employees WHERE employee_id = ?", id);
